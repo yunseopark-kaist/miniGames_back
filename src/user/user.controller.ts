@@ -1,5 +1,5 @@
 // src/user/user.controller.ts
-import { Controller, Get, Param, Post, Body, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Query } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from '../schemas/user.schema';
 
@@ -7,23 +7,16 @@ import { User } from '../schemas/user.schema';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Get()
-  findAll(): Promise<User[]> {
-    return this.userService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string): Promise<User> {
-    return this.userService.findOne(id);
-  }
-
   @Post()
-  create(@Body() user: User): Promise<User> {
-    return this.userService.create(user);
+  async createUser(@Body('id') id: number, @Body('nickname') nickname: string): Promise<User> {
+    return this.userService.createUser(id, nickname);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string): Promise<User> {
-    return this.userService.remove(id);
+  @Get()
+  async getUsers(@Query('id') id: number): Promise<User[]> {
+    if (id) {
+      return [await this.userService.getUserById(id)];
+    }
+    return this.userService.getAllUsers();
   }
 }

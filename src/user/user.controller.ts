@@ -1,7 +1,12 @@
 // src/user/user.controller.ts
-import { Controller, Get, Post, Body, Param, Query,Put ,Delete} from '@nestjs/common';
+//엔드포인트를 정의
+
+import { Controller, Get, Post, Body, Param, Query,Put ,Delete, UseInterceptors, UploadedFile} from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from '../schemas/user.schema';
+import {Express} from 'express';
+import { FileInterceptor } from '@nestjs/platform-express';
+
 
 @Controller('users')
 export class UserController {
@@ -32,5 +37,11 @@ export class UserController {
   @Delete()
   async removeUser(@Query('id') id: number): Promise<User>{
     return this.userService.removeUser(id);
+  }
+
+  @Post('uploadProfileImage')
+  @UseInterceptors(FileInterceptor('image'))
+  async uploadProfileImage(@Body('id')id: number, @UploadedFile() file: Express.Multer.File){
+    return this.userService.uploadProfileImage(id, file);
   }
 }

@@ -3,6 +3,10 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User, UserDocument } from '../schemas/user.schema';
+import {Express} from 'express';
+import {promises as fs} from 'fs';
+import {join} from 'path';
+
 
 @Injectable()
 export class UserService {
@@ -48,6 +52,15 @@ export class UserService {
     return user;
   }
 
-  
+  async uploadProfileImage(id: number, file: Express.Multer.File): Promise<User>{
+    const user = await this.userModel.findOne({id}).exec();
+    if(! user){
+      throw new Error('User not found');
+    }
+    const uploadPath = join(__dirname, '..','..','${id}-${file.originalname}');
+    await fs.writeFile(uploadPath, file.buffer);
+    user.profileImageUrl =uploadPath;
+    return user.save();
+  }
 
 }

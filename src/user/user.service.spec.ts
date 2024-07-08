@@ -6,9 +6,9 @@ import { User } from '../schemas/user.schema';
 import { Model } from 'mongoose';
 
 const mockUser = {
-  _id: 'someId',
+  id: 2,
   name: 'John Doe',
-  email: 'john@example.com',
+  //email: 'john@example.com',
 };
 
 const mockUserModel = {
@@ -40,13 +40,13 @@ describe('UserService', () => {
   });
 
   it('should return an array of users', async () => {
-    const users = await service.findAll();
+    const users = await service.createUser(2,'John Doe');
     expect(users).toEqual([mockUser]);
     expect(model.find).toHaveBeenCalled();
   });
 
   it('should delete a user by id', async () => {
-    const deletedUser = await service.remove('someId');
+    const deletedUser = await service.getUserById(2);
     expect(deletedUser).toEqual(mockUser);
     expect(model.findByIdAndDelete).toHaveBeenCalledWith('someId');
   });

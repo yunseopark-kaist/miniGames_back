@@ -6,7 +6,7 @@ export type UserDocument = User & Document;
 
 @Schema()
 export class User {
-  @Prop({ required: true })
+  @Prop({ required: true,unique: true }) //안정성을 위해 id unique하게 관리
   id: number;
 
   @Prop({ required: true })

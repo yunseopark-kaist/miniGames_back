@@ -10,7 +10,7 @@ import {join} from 'path';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
+  constructor(@InjectModel(User.name, 'userdbConnection') private userModel: Model<UserDocument>) {}
 
   async createUser(id: number, nickname: string): Promise<User> {
     const newUser = new this.userModel({ id, nickname });

@@ -14,6 +14,6 @@ export class GameController {
 
   @Get()
   async loadGames(@Query('id') id: String): Promise<Game[]> {
-    return await this.gameService.loadGamesById(id);
+    return await this.gameService.loadGamesByUserId(id);
   }
 }

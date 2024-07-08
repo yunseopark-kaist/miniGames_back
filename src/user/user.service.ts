@@ -12,8 +12,8 @@ import {join} from 'path';
 export class UserService {
   constructor(@InjectModel(User.name, 'userdbConnection') private userModel: Model<UserDocument>) {}
 
-  async createUser(id: number, nickname: string): Promise<User> {
-    const newUser = new this.userModel({ id, nickname });
+  async createUser(id: number, nickname: string, score:number): Promise<User> {
+    const newUser = new this.userModel({ id, nickname, score });
     return newUser.save();
   }
 
@@ -34,6 +34,16 @@ export class UserService {
 
     // Step 2: 사용자의 닉네임을 업데이트하고 저장합니다.
     user.nickname = newNickname;
+    await user.save();
+
+    return user;
+  }
+  async userScoreUp(id: number, delta:number): Promise<User>{
+    const user= await this.userModel.findOne({id}).exec();
+    if(!user){
+      throw new DOMException('User not found');
+    }
+    user.score= user.score+ delta;
     await user.save();
 
     return user;

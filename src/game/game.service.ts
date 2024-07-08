@@ -7,7 +7,7 @@ import { SaveGameDto } from './dto/save-game.dto'; // DTO 파일 경로
 @Injectable()
 export class GameService {
   constructor(
-    @InjectModel('Game') private readonly gameModel: Model<Game>,
+    @InjectModel(Game.name, 'gamedbConnection') private readonly gameModel: Model<GameDocument>,
   ) {}
 
   // 게임 데이터를 저장하는 메서드

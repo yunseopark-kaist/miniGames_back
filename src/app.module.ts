@@ -4,6 +4,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { GameModule } from './game/game.module';
+import { RelationshipModule } from './relationship/relationship.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { GameModule } from './game/game.module';
     }),
     UserModule,
     GameModule,
+    RelationshipModule
   ],
   controllers: [AppController],
   providers: [AppService],

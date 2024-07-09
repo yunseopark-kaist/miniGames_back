@@ -17,6 +17,7 @@ export class UserController {
     return this.userService.createUser(id, nickname,0);
   }
 
+
   @Get()
   async getUsers(@Query('id') id: number): Promise<User[]> {
     if (id) {
@@ -35,11 +36,14 @@ export class UserController {
       return this.userService.getTopRankings(10);
     }
 
+
   @Put('scoreup')
     async userScoreUp(@Query('id') id: number, @Body() body: {delta: number}): Promise<User>{
       const {delta} =body;
       return this.userService.userScoreUp(id, delta);
     }
+
+    
 
   @Put('nickname')
     async updateUser(@Query('id') id: number, @Body() body:{nickname: string}) : Promise<User>{

@@ -30,6 +30,11 @@ export class UserController {
       return !!user;
     }
   
+  @Get('toprankings')
+    async getTopRenkings(): Promise<User[]>{
+      return this.userService.getTopRankings(10);
+    }
+
   @Put('scoreup')
     async userScoreUp(@Query('id') id: number, @Body() body: {delta: number}): Promise<User>{
       const {delta} =body;

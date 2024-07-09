@@ -73,4 +73,27 @@ export class UserService {
     return user.save();
   }
 
+  async getTopRankings(limit: number=10): Promise<User[]>{
+    const users = await this.userModel.find().sort({ score: -1 }).exec();
+    let rank = 1;
+    const topRankings: User[] = [];
+  
+    for (const user of users) {
+      if (rank <= limit) {
+        user.ranking = rank;
+        topRankings.push(user);
+      } else {
+        user.ranking = 0; // Reset rank for users beyond the top 'limit'
+      }
+      rank++;
+      await user.save();
+    }
+  
+    return topRankings;
+  }
+
+  async createDummyUsers(users: User[]): Promise<User[]> {
+    return this.userModel.create(users);
+  }
+
 }

@@ -15,6 +15,9 @@ export class User extends Document {
 
   @Prop()
   profileImageUrl: string;
+
+  @Prop()
+  ranking: number;
 }
 
 export type UserDocument = User & Document;

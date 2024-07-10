@@ -9,6 +9,15 @@ export class User extends Document {
 
   @Prop({ required: true })
   nickname: string;
+
+  @Prop({required: true})
+  score:number;
+
+  @Prop()
+  profileImageUrl: string;
+
+  @Prop()
+  ranking: number;
 }
 
 export type UserDocument = User & Document;

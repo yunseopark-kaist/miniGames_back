@@ -4,6 +4,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { GameModule } from './game/game.module';
+import { RelationshipModule } from './relationship/relationship.module';
 import { SharedGameModule } from './sharedgame/sharedgame.module';
 
 @Module({
@@ -18,7 +19,8 @@ import { SharedGameModule } from './sharedgame/sharedgame.module';
     }),
     UserModule,
     GameModule,
-    SharedGameModule,
+    RelationshipModule,
+    SharedGameModule
   ],
   controllers: [AppController],
   providers: [AppService],

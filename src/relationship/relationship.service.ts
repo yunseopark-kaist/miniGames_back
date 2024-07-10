@@ -9,7 +9,21 @@ export class RelationshipService {
   constructor(@InjectModel(Relationship.name, 'userdbConnection') private relationshipModel: Model<Relationship>) {}
 
   async createRequest(requesterId: number, recipientId: number): Promise<Relationship> {
-    return new this.relationshipModel({ requesterId, recipientId }).save();
+    const existingRequest= await this.relationshipModel.findOne({requesterId: requesterId, recipientId: recipientId, isAccepted: false}).exec();
+    const existingFriend= await this.relationshipModel.findOne({
+      $or: [
+        { requesterId: requesterId, recipientId: recipientId, isAccepted: true },
+        { requesterId: recipientId, recipientId: requesterId, isAccepted: true }
+      ]
+    }).exec();
+    console.log("existingFriend: ",existingFriend);
+    if(!! existingFriend){
+      return existingFriend;
+    }
+    else if(!! existingRequest){
+      return existingRequest;
+    }
+    else{return new this.relationshipModel({ requesterId, recipientId }).save();}
   }
 
   async getFriends(userId: number): Promise<number[]> {
@@ -31,21 +45,46 @@ export class RelationshipService {
   }
 
   async acceptRequest(requesterId: number, recipientId: number): Promise<void> {
-    await this.relationshipModel.updateOne({ requesterId, recipientId }, { isAccepted: true });
-    await this.relationshipModel.deleteOne({ requesterId: recipientId, recipientId: requesterId, isAccepted: false });
+    const theOne=await this.relationshipModel.findOne({requesterId:requesterId, recipientId:recipientId}).exec();
+    const andOposite= await this.relationshipModel.findOne({requesterId: recipientId, recipientId: requesterId}).exec();
+    if (! theOne){
+      throw new DOMException('request not found');
+    }
+    
+    else{
+      theOne.isAccepted= true;
+      await theOne.save();
+      if(!! andOposite){
+        await this.relationshipModel.deleteOne({requesterId:recipientId, recipientId:requesterId})
+      }
+    }
   }
 
   async rejectRequest(requesterId: number, recipientId: number): Promise<void> {
-    await this.relationshipModel.deleteOne({ requesterId, recipientId, isAccepted: false });
+    const theOne= await this.relationshipModel.findOne({requesterId:requesterId, recipientId:recipientId,isAccepted:false})
+    if(! theOne){
+      throw new DOMException('request not found');
+    }
+    else{
+      await this.relationshipModel.deleteOne({ requesterId, recipientId, isAccepted: false });
+    }
   }
 
   async removeFriend(userId: number, friendId: number): Promise<void> {
-    await this.relationshipModel.deleteOne({
-      $or: [
-        { requesterId: userId, recipientId: friendId, isAccepted: true },
-        { requesterId: friendId, recipientId: userId, isAccepted: true }
-      ]
-    });
+    const theOne= await this.relationshipModel.findOne({requesterId:userId, recipientId:friendId,isAccepted:true})
+    const theTwo= await this.relationshipModel.findOne({requesterId:friendId, recipientId:userId,isAccepted:true})
+    if ((! theOne)&&(! theTwo)){
+      throw new DOMException('friends not found');
+    }
+    else if ((!! theOne) && (! theTwo)){
+      await this.relationshipModel.deleteOne({requesterId:userId, recipientId: friendId,isAccepted:true});
+    }
+    else if((! theOne)&& (!! theTwo)){
+      await this.relationshipModel.deleteOne({requesterId:friendId, recipientId:userId,isAccepted:true});
+    }
+    else{
+      throw new DOMException('index conflict occurred');
+    }
   }
 
   async areFriends(id1: number, id2: number): Promise<boolean> {

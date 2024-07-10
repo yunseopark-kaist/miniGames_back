@@ -44,6 +44,11 @@ export class RelationshipController {
     return this.relationshipService.rejectRequest(requesterId, recipientId);
   }
 
+  @Put('accept')
+  async acceptRequest(@Body('requesterId') requesterId: number, @Body('recipientId') recipientId: number) {
+    return this.relationshipService.acceptRequest(requesterId, recipientId);
+  }
+
   @Delete('remove')
   async removeFriend(@Body('userId') userId: number, @Body('friendId') friendId: number) {
     return this.relationshipService.removeFriend(userId, friendId);

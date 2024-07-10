@@ -50,7 +50,7 @@ export class RelationshipController {
   }
 
   @Delete('remove')
-  async removeFriend(@Body('userId') userId: number, @Body('friendId') friendId: number) {
+  async removeFriend(@Body('requesterId') userId: number, @Body('recipientId') friendId: number)  {
     return this.relationshipService.removeFriend(userId, friendId);
   }
 }

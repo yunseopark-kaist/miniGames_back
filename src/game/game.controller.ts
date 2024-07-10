@@ -13,7 +13,7 @@ export class GameController {
   }
 
   @Get()
-  async loadGames(@Query('id') id: String): Promise<Game[]> {
-    return await this.gameService.loadGamesByUserId(id);
+  async loadGames(@Query('userId') userId: String): Promise<Game[]> {
+    return await this.gameService.loadGamesByUserId(userId);
   }
 }

@@ -11,17 +11,12 @@ export class SharedGameService {
   ) {}
 
   async shareGame(sharedGameDto: SharedGameDto): Promise<SharedGame> {
-    const { shareduserId, userId, name, gameState} = sharedGameDto;
-
     // 공유 게임 데이터 저장
-    const sharedGame = new this.sharedGameModel({
-      shareduserId,
-      userId,
-      name,
-      gameState
-    });
-
+    const sharedGame = new this.sharedGameModel(sharedGameDto);
     return sharedGame.save();
+  } catch (error){
+    console.error('Error saving shared game:', error);
+    throw new Error('Error saving shared game');
   }
 
   async getSharedGames(userId: string): Promise<SharedGame[]> {

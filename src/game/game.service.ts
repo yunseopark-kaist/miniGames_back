@@ -16,6 +16,6 @@ export class GameService {
   }
 
   async loadGamesByUserId(userId: String): Promise<Game[]> {
-    return this.gameModel.find({ userId }).exec();
+    return this.gameModel.find({ userId: userId }).exec();
   }
 }

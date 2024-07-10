@@ -5,10 +5,10 @@ export type SharedGameDocument = SharedGame & Document;
 
 @Schema()
 export class SharedGame{
-    @Prop({ required: true })
-    shareduserId: string;
+  @Prop({ required: true })
+  shareduserId: string;
 
-    @Prop({ required: true })
+  @Prop({ required: true })
   userId: string;
 
   @Prop({ required: true })
